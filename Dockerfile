@@ -1,4 +1,4 @@
-FROM ebrown/git:2.44.0 as built_git
+FROM ebrown/git:latest as built_git
 
 FROM ebrown/python:3.11 as assembled
 COPY --from=built_git /opt/git /opt/git
@@ -33,7 +33,7 @@ RUN . /app/venv/bin/activate && \
         heic2png \
         matplotlib \
         "aiohttp[speedups]" \
-        jupyterlab>=4.2.0 \
+        jupyterlab>=4.1.8 \
         jupyterlab-lsp>=5.1.0 \
         jupyter-lsp>=2.2.3 \
         jupyter_server \
