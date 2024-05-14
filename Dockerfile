@@ -136,7 +136,7 @@ RUN yum install dnf-plugins-core -y && \
                 procps-ng \
                 findutils -y && \
                 dnf clean all;
-ARG INSTALL_NODE_VERSION=20.13.0
+ARG INSTALL_NODE_VERSION=20.13.1
 RUN mkdir /opt/nodejs && \
     cd /opt/nodejs && \
     curl -L https://nodejs.org/dist/v${INSTALL_NODE_VERSION}/node-v${INSTALL_NODE_VERSION}-linux-x64.tar.xz | xzcat | tar -xf - && \
