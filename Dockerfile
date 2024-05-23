@@ -7,7 +7,7 @@ ENV LD_LIBRARY_PATH=/opt/git/lib:${LD_LIBRARY_PATH}
 WORKDIR /app
 ARG XGB_VERSION=2.0.3
 ARG PY_NP_VERSION=1.26.4
-ARG PY_SCIPY_VERSION=1.13.0
+ARG PY_SCIPY_VERSION=1.13.1
 COPY ./xgboost-${XGB_VERSION}-py3-none-linux_x86_64.whl /tmp/xgboost-${XGB_VERSION}-py3-none-linux_x86_64.whl 
 COPY ./numpy-${PY_NP_VERSION}-cp311-cp311-linux_x86_64.whl /tmp/numpy-${PY_NP_VERSION}-cp311-cp311-linux_x86_64.whl
 COPY ./scipy-${PY_SCIPY_VERSION}-cp311-cp311-linux_x86_64.whl /tmp/scipy-${PY_SCIPY_VERSION}-cp311-cp311-linux_x86_64.whl
