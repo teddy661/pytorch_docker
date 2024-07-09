@@ -5,9 +5,9 @@ COPY --from=built_git /opt/git /opt/git
 ENV PATH=/opt/git/bin:${PATH}
 ENV LD_LIBRARY_PATH=/opt/git/lib:${LD_LIBRARY_PATH}
 WORKDIR /app
-ARG XGB_VERSION=2.0.3
-ARG PY_NP_VERSION=1.26.4
-ARG PY_SCIPY_VERSION=1.13.1
+ARG XGB_VERSION=2.1.0
+ARG PY_NP_VERSION=2.0.0
+ARG PY_SCIPY_VERSION=1.14.0
 COPY ./xgboost-${XGB_VERSION}-py3-none-linux_x86_64.whl /tmp/xgboost-${XGB_VERSION}-py3-none-linux_x86_64.whl 
 COPY ./numpy-${PY_NP_VERSION}-cp311-cp311-linux_x86_64.whl /tmp/numpy-${PY_NP_VERSION}-cp311-cp311-linux_x86_64.whl
 COPY ./scipy-${PY_SCIPY_VERSION}-cp311-cp311-linux_x86_64.whl /tmp/scipy-${PY_SCIPY_VERSION}-cp311-cp311-linux_x86_64.whl
@@ -22,11 +22,11 @@ RUN python3 -m virtualenv --symlinks --download /app/venv \
 		\) -exec rm -rf '{}' +; 
 
 RUN . /app/venv/bin/activate && \
-        pip3 install --no-cache-dir --upgrade pip && \
+        python3 -m pip install --no-cache-dir --upgrade pip && \
         pip3 install --no-cache-dir --upgrade setuptools wheel && \
+        pip3 install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 && \
         pip3 install --no-cache-dir /tmp/numpy-${PY_NP_VERSION}-cp311-cp311-linux_x86_64.whl /tmp/scipy-${PY_SCIPY_VERSION}-cp311-cp311-linux_x86_64.whl /tmp/xgboost-${XGB_VERSION}-py3-none-linux_x86_64.whl /tmp/xgboost-${XGB_VERSION}-py3-none-linux_x86_64.whl && \
-        pip3 install --no-cache-dir \
-        torch torchvision torchaudio \
+        pip3 install --no-cache-dir  \
         opencv-contrib-python-headless \
         pillow \
 		pillow-heif \
@@ -55,7 +55,7 @@ RUN . /app/venv/bin/activate && \
         mypy \
         "pandas[performance, excel, computation, plot, output_formatting, html, parquet, hdf5]" \
         tables \
-        "polars[pandas, numpy, pyarrow, fsspec, connectorx, xlsx2csv, deltalake, timezone]" \
+        "polars[pyarrow, fsspec, connectorx, xlsx2csv, deltalake, timezone]" \
         polars-cli \
         fastexcel \
         openpyxl \
@@ -94,17 +94,21 @@ RUN . /app/venv/bin/activate && \
 #        "fastapi-cache2[redis]" \
         python-multipart \
         pydantic \
+        uvloop \
+        httptools \
+        python-dotenv \
         "uvicorn[standard]" \
         pyyaml \
         xlsx2csv \
         cython \
+        numba \ 
         sqlalchemy && \find ./ \
                             \( \
                             \( -type d -a \( -name __pycache__ \) \) \
                             -o \
                             \( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
                         \) -exec rm -rf '{}' +;           
-RUN . /app/venv/bin/activate && pip3 install -U --no-cache-dir --no-dependencies qudida albumentations
+# RUN . /app/venv/bin/activate && pip3 install -U --no-cache-dir --no-dependencies qudida albumentations
 FROM nvidia/cuda:12.1.1-cudnn8-runtime-rockylinux8 as prod
 RUN yum install dnf-plugins-core -y && \
     dnf install epel-release -y && \
