@@ -1,6 +1,6 @@
-FROM ebrown/git:latest as built_git
+FROM ebrown/git:latest AS built_git
 
-FROM ebrown/python:3.11 as assembled
+FROM ebrown/python:3.11 AS assembled
 COPY --from=built_git /opt/git /opt/git
 ENV PATH=/opt/git/bin:${PATH}
 ENV LD_LIBRARY_PATH=/opt/git/lib:${LD_LIBRARY_PATH}
@@ -109,7 +109,7 @@ RUN . /app/venv/bin/activate && \
                             \( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
                         \) -exec rm -rf '{}' +;           
 # RUN . /app/venv/bin/activate && pip3 install -U --no-cache-dir --no-dependencies qudida albumentations
-FROM nvidia/cuda:12.1.1-cudnn8-runtime-rockylinux8 as prod
+FROM nvidia/cuda:12.1.1-cudnn8-runtime-rockylinux8 AS prod
 RUN yum install dnf-plugins-core -y && \
     dnf install epel-release -y && \
     /usr/bin/crb enable -y && \
