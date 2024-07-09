@@ -171,7 +171,7 @@ RUN mkdir git-lfs && \
     cd /tmp && \
     rm -rf /tmp/git-lfs
 COPY --from=assembled /app/venv /app/venv/
-ENV PATH /app/venv/bin:$PATH
+ENV PATH=/app/venv/bin:$PATH
 WORKDIR /root
 COPY ./root /root
 COPY entrypoint.sh /usr/local/bin
